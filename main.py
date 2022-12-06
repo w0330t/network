@@ -69,7 +69,7 @@ def cost(y:int, y_hat:torch.Tensor) -> torch.Tensor:
     return (y_hat - t).pow(2).sum() / 2
 
 
-def sgd(param:torch.Tensor, lr:float):
+def gd(param:torch.Tensor, lr:float):
     with torch.no_grad():
         param = param - lr * param.grad
         param.requires_grad = True
@@ -87,8 +87,8 @@ for i in range(len(expamles)):
     cost_result = cost(expamles[i][1], model_result)
     cost_result.backward()
     for j in range(len(weights)):
-        weights[j] = sgd(weights[j], lr)
-        biases[j] = sgd(biases[j], lr)
+        weights[j] = gd(weights[j], lr)
+        biases[j] = gd(biases[j], lr)
     if (i + 1) % 5000 == 0:
         print(f'index: {i + 1}, Cost: {cost_result}')
 
