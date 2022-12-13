@@ -138,4 +138,4 @@ for label, image_data_tensor, target_tensor in mnist_test_dataset:
     if (answer.argmax() == label):        
         score += 1
     items += 1
-print(score, items, score/items)
+print(f'{score}/{items}, {score /items * 100}')
