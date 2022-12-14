@@ -17,17 +17,21 @@ class Classifier(nn.Module):
         # 定义模型
         self.model = nn.Sequential(
             nn.Linear(784, 200),  # 输入层到隐藏层
-            nn.Sigmoid(),         # Sigmoid激活函数
+            # nn.Sigmoid(),
+            nn.LeakyReLU(0.02),
+            nn.LayerNorm(200),
             nn.Linear(200, 10),   # 隐藏层到输出层
-            nn.Sigmoid(),         # Sigmoid激活函数
+            # nn.LeakyReLU(0.02),
+            nn.Sigmoid()
         )
 
-
         # 定义损失函数
-        self.loss_function = nn.MSELoss()
+        # self.loss_function = nn.MSELoss() #均方误差
+        self.loss_function = nn.BCELoss() #二元交叉熵
 
         # 定义优化器
-        self.optimiser = torch.optim.SGD(self.parameters(), lr=0.01)
+        # self.optimiser = torch.optim.SGD(self.parameters(), lr=0.01) #随机梯度下降
+        self.optimiser = torch.optim.Adam(self.parameters()) 
 
         # 记录训练进展的计数器和列表
         self.counter = 0
@@ -97,6 +101,7 @@ class MnistDataset(Dataset):
         plt.imshow(arr, interpolation='none', cmap='Blues')
         plt.show()
 
+
 mnist_dataset = MnistDataset('data/training_data.npy')
 # 测试代码
 # mnist_dataset.plot_image(10)
@@ -113,7 +118,7 @@ for i in range(epochs):
     print(f'runing: {time.perf_counter()}')
 
 # 绘制分类器损失值
-# C.plot_progress()
+C.plot_progress()
 
 # 测试
 mnist_test_dataset = MnistDataset('data/test_data.npy')
@@ -138,4 +143,4 @@ for label, image_data_tensor, target_tensor in mnist_test_dataset:
     if (answer.argmax() == label):        
         score += 1
     items += 1
-print(f'{score}/{items}, {score /items * 100}')
+print(f'{score}/{items}, {score /items * 100}%')
